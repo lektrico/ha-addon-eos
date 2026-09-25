@@ -1,0 +1,23 @@
+name: Delta EnergyOS gateway
+version: "0.1.0"
+slug: delta_gateway
+description: >-
+  Runs the Delta EnergyOS edge agent on this Home Assistant host, so it reads
+  and protects the site's chargers, meters and batteries on the local network.
+url: https://github.com/lektrico/ha-addon-eos
+arch:
+  - aarch64
+  - amd64
+init: false
+boot: auto
+startup: services
+# The agent talks Modbus TCP and HTTP to devices on the site LAN.
+host_network: true
+options:
+  connect_code: ""
+  channel: stable
+  api: https://api.deltaeos.com
+schema:
+  connect_code: password
+  channel: list(stable|beta)
+  api: url

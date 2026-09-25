@@ -1,0 +1,10 @@
+#!/command/with-contenv bashio
+# shellcheck shell=bash
+# The agent itself, from the release the supervisor installed. On a fresh
+# install there is none yet: wait for the supervisor's first download.
+AGENT=/data/ems-edge/current/ems-edge
+until [ -x "$AGENT" ]; do
+    bashio::log.info "Waiting for the supervisor to install the agent…"
+    sleep 10
+done
+exec "$AGENT" --config /data/ems-edge/config.yaml

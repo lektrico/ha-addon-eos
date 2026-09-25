@@ -1,0 +1,14 @@
+#!/command/with-contenv bashio
+# shellcheck shell=bash
+# The OTA supervisor: on a fresh install it takes the channel's latest agent
+# (--bootstrap, inert once anything is installed), then follows the release
+# Delta EnergyOS assigns this agent, verifying every artifact before a swap.
+bashio::log.info "Starting ems-supervisor…"
+exec /data/bin/ems-supervisor \
+    --root /data/ems-edge \
+    --api "$(cat /data/api)" \
+    --connect-code-file /data/connect_code \
+    --channel "$(cat /data/channel)" \
+    --runtime go --platform hass_addon --arch "$(cat /data/arch)" \
+    --bootstrap \
+    --restart "/command/s6-svc -r /run/service/ems-edge"

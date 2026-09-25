@@ -1,0 +1,12 @@
+configuration:
+  connect_code:
+    name: Connect code
+    description: >-
+      From Delta EnergyOS: open your site → Connect → Get my connect code.
+      It identifies the site and carries its credential; keep it private.
+  channel:
+    name: Release channel
+    description: Which agent releases this gateway may run. Leave on stable.
+  api:
+    name: Delta EnergyOS API
+    description: Leave as is unless support asks you to change it.

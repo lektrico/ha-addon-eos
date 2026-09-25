@@ -1,0 +1,12 @@
+configuration:
+  connect_code:
+    name: Cod de conectare
+    description: >-
+      Din Delta EnergyOS: deschideți situl → Conectare → Obține codul de
+      conectare. Identifică situl și conține credențialele lui; păstrați-l privat.
+  channel:
+    name: Canal de versiuni
+    description: Ce versiuni ale agentului poate rula acest gateway. Lăsați pe stable.
+  api:
+    name: API Delta EnergyOS
+    description: Nu modificați decât dacă vă cere echipa de suport.
