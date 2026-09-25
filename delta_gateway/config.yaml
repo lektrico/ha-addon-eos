@@ -1,5 +1,5 @@
 name: Delta EnergyOS gateway
-version: "0.1.1"
+version: "0.1.2"
 slug: delta_gateway
 description: >-
   Runs the Delta EnergyOS edge agent on this Home Assistant host, so it reads
@@ -12,6 +12,14 @@ boot: auto
 startup: services
 # The agent talks Modbus TCP and HTTP to devices on the site LAN.
 host_network: true
+# Remote access: the agent brings up a WireGuard tunnel to the Delta
+# EnergyOS operations hub (kernel WireGuard; /dev/net/tun only for the
+# userspace fallback). It is created only when Delta EnergyOS enables remote
+# access for the site, and only reaches the hub — nothing else.
+privileged:
+  - NET_ADMIN
+devices:
+  - /dev/net/tun
 options:
   connect_code: ""
   channel: stable

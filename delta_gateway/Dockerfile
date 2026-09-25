@@ -3,7 +3,8 @@ FROM $BUILD_FROM
 
 # curl + jq to talk to the Delta EnergyOS API, openssl to verify the ed25519
 # signature on the supervisor binary before it is ever executed.
-RUN apk add --no-cache curl jq openssl
+# wireguard-tools + iproute2: the remote-access tunnel (only when enabled).
+RUN apk add --no-cache curl jq openssl wireguard-tools iproute2
 
 COPY rootfs /
 RUN chmod a+x /etc/s6-overlay/scripts/*.sh \

@@ -22,6 +22,15 @@ supervisor then installs the agent and follows the releases Delta EnergyOS
 assigns this gateway — every update is signature-checked and rolled back if
 the new version does not come up healthy.
 
+## Remote access
+
+When Delta EnergyOS staff enable remote access for your site, the gateway
+opens a WireGuard tunnel to the Delta EnergyOS operations hub so support can
+reach this Home Assistant host. The keys are generated on this device (the
+private key never leaves it); the tunnel reaches only the hub. That is why
+the add-on asks for the `NET_ADMIN` capability. Staff can disable it at any
+time, and the tunnel is removed.
+
 ## Notes
 
 - **Host network** is required: the agent talks to devices on the site LAN.
