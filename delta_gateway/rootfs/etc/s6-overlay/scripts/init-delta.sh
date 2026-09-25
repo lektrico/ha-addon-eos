@@ -63,19 +63,27 @@ printf '%s' "$ARCH" > /data/arch
 printf '%s' "$API" > /data/api
 printf '%s' "$CHANNEL" > /data/channel
 
-if [ -x "$BIN/ems-supervisor" ]; then
-    bashio::log.info "Site ${SITE_ID}: supervisor present, starting."
-    exit 0
+# The supervisor never updates itself, so each start checks for a newer one
+# and installs it — same checks as the first install. Delta EnergyOS
+# unreachable: keep the installed one rather than refusing to start.
+INSTALLED="$(cat "$BIN/.version" 2>/dev/null || true)"
+bashio::log.info "Site ${SITE_ID}: checking the supervisor (${CHANNEL}, ${ARCH}; installed: ${INSTALLED:-none})…"
+if ! META="$(curl -fsS -u "${USERNAME}:${PASSWORD}" \
+    "${API}/agent/releases/${CHANNEL}/latest?runtime=gosup&platform=hass_addon&arch=${ARCH}")"; then
+    if [ -x "$BIN/ems-supervisor" ]; then
+        bashio::log.warning "Could not reach Delta EnergyOS; starting the installed supervisor ${INSTALLED:-(unknown version)}."
+        exit 0
+    fi
+    bashio::exit.nok "Could not reach Delta EnergyOS, or the connect code was refused. Re-issue the code if it was rotated."
 fi
-
-bashio::log.info "Site ${SITE_ID}: fetching the supervisor (${CHANNEL}, ${ARCH})…"
-META="$(curl -fsS -u "${USERNAME}:${PASSWORD}" \
-    "${API}/agent/releases/${CHANNEL}/latest?runtime=gosup&platform=hass_addon&arch=${ARCH}")" \
-    || bashio::exit.nok "Could not reach Delta EnergyOS, or the connect code was refused. Re-issue the code if it was rotated."
 URL="$(jq -r .download_url <<<"$META")"
 SHA="$(jq -r .sha256 <<<"$META")"
 SIG="$(jq -r .signature <<<"$META")"
 VERSION="$(jq -r .version <<<"$META")"
+if [ -x "$BIN/ems-supervisor" ] && [ "$VERSION" = "$INSTALLED" ]; then
+    bashio::log.info "Supervisor ${VERSION} is current, starting."
+    exit 0
+fi
 case "$URL" in /*) URL="${API}${URL}" ;; esac
 
 TMP="$(mktemp -d)"
@@ -95,4 +103,5 @@ openssl pkeyutl -verify -pubin -inkey "$TMP/pub.pem" -rawin -in "$TMP/msg" -sigf
     || bashio::exit.nok "Supervisor signature invalid — refusing to install."
 
 install -m 0755 "$TMP/ems-supervisor" "$BIN/ems-supervisor"
+printf '%s' "$VERSION" > "$BIN/.version"
 bashio::log.info "Supervisor ${VERSION} verified and installed."

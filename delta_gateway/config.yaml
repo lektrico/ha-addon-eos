@@ -1,5 +1,5 @@
 name: Delta EnergyOS gateway
-version: "0.1.0"
+version: "0.1.1"
 slug: delta_gateway
 description: >-
   Runs the Delta EnergyOS edge agent on this Home Assistant host, so it reads
@@ -7,7 +7,6 @@ description: >-
 url: https://github.com/lektrico/ha-addon-eos
 arch:
   - aarch64
-  - amd64
 init: false
 boot: auto
 startup: services
