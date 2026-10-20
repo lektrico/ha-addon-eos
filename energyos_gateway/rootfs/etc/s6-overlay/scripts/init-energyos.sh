@@ -2,7 +2,7 @@
 # shellcheck shell=bash
 # One-shot setup before the agent and its supervisor start:
 #   1. the connect code → /data/connect_code (0600) and the agent's config.yaml
-#   2. first start only: download ems-supervisor from Delta EnergyOS,
+#   2. first start only: download ems-supervisor from LEKTRI.CO EnergyOS,
 #      authenticated by the SITE's credential, and refuse to install it unless
 #      its SHA-256 and ed25519 signature check out against our public key.
 # The supervisor then installs and updates the agent itself (signed, staged).
@@ -18,7 +18,7 @@ mkdir -p "$ROOT" "$BIN"
 
 CODE="$(bashio::config 'connect_code')"
 if [ -z "$CODE" ]; then
-    bashio::exit.nok "Set 'connect_code' in the add-on configuration (Delta EnergyOS → your site → Connect)."
+    bashio::exit.nok "Set 'connect_code' in the add-on configuration (LEKTRI.CO EnergyOS → your site → Connect)."
 fi
 API="$(bashio::config 'api')"
 CHANNEL="$(bashio::config 'channel')"
@@ -64,17 +64,17 @@ printf '%s' "$API" > /data/api
 printf '%s' "$CHANNEL" > /data/channel
 
 # The supervisor never updates itself, so each start checks for a newer one
-# and installs it — same checks as the first install. Delta EnergyOS
+# and installs it — same checks as the first install. LEKTRI.CO EnergyOS
 # unreachable: keep the installed one rather than refusing to start.
 INSTALLED="$(cat "$BIN/.version" 2>/dev/null || true)"
 bashio::log.info "Site ${SITE_ID}: checking the supervisor (${CHANNEL}, ${ARCH}; installed: ${INSTALLED:-none})…"
 if ! META="$(curl -fsS -u "${USERNAME}:${PASSWORD}" \
     "${API}/agent/releases/${CHANNEL}/latest?runtime=gosup&platform=hass_addon&arch=${ARCH}")"; then
     if [ -x "$BIN/ems-supervisor" ]; then
-        bashio::log.warning "Could not reach Delta EnergyOS; starting the installed supervisor ${INSTALLED:-(unknown version)}."
+        bashio::log.warning "Could not reach LEKTRI.CO EnergyOS; starting the installed supervisor ${INSTALLED:-(unknown version)}."
         exit 0
     fi
-    bashio::exit.nok "Could not reach Delta EnergyOS, or the connect code was refused. Re-issue the code if it was rotated."
+    bashio::exit.nok "Could not reach LEKTRI.CO EnergyOS, or the connect code was refused. Re-issue the code if it was rotated."
 fi
 URL="$(jq -r .download_url <<<"$META")"
 SHA="$(jq -r .sha256 <<<"$META")"

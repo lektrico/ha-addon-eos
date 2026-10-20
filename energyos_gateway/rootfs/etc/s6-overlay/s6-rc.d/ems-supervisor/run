@@ -2,7 +2,7 @@
 # shellcheck shell=bash
 # The OTA supervisor: on a fresh install it takes the channel's latest agent
 # (--bootstrap, inert once anything is installed), then follows the release
-# Delta EnergyOS assigns this agent, verifying every artifact before a swap.
+# LEKTRI.CO EnergyOS assigns this agent, verifying every artifact before a swap.
 bashio::log.info "Starting ems-supervisor…"
 exec /data/bin/ems-supervisor \
     --root /data/ems-edge \
