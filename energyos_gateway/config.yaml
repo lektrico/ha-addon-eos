@@ -1,8 +1,8 @@
-name: Delta EnergyOS gateway
-version: "0.1.2"
-slug: delta_gateway
+name: LEKTRI.CO EnergyOS gateway
+version: "0.2.0"
+slug: energyos_gateway
 description: >-
-  Runs the Delta EnergyOS edge agent on this Home Assistant host, so it reads
+  Runs the LEKTRI.CO EnergyOS edge agent on this Home Assistant host, so it reads
   and protects the site's chargers, meters and batteries on the local network.
 url: https://github.com/lektrico/ha-addon-eos
 arch:
@@ -12,9 +12,9 @@ boot: auto
 startup: services
 # The agent talks Modbus TCP and HTTP to devices on the site LAN.
 host_network: true
-# Remote access: the agent brings up a WireGuard tunnel to the Delta
+# Remote access: the agent brings up a WireGuard tunnel to the LEKTRI.CO
 # EnergyOS operations hub (kernel WireGuard; /dev/net/tun only for the
-# userspace fallback). It is created only when Delta EnergyOS enables remote
+# userspace fallback). It is created only when LEKTRI.CO EnergyOS enables remote
 # access for the site, and only reaches the hub — nothing else.
 privileged:
   - NET_ADMIN

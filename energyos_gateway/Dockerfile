@@ -1,7 +1,7 @@
 ARG BUILD_FROM
 FROM $BUILD_FROM
 
-# curl + jq to talk to the Delta EnergyOS API, openssl to verify the ed25519
+# curl + jq to talk to the LEKTRI.CO EnergyOS API, openssl to verify the ed25519
 # signature on the supervisor binary before it is ever executed.
 # wireguard-tools + iproute2: the remote-access tunnel (only when enabled).
 RUN apk add --no-cache curl jq openssl wireguard-tools iproute2
